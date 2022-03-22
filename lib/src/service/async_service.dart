@@ -91,11 +91,18 @@ abstract class StarlightSync<N, R> {
     required String id,
     required Future<R> Function() task,
   }) {
-    final _StarlightTask _task = _StarlightSyncExtension._process(id);
-    task().then((result) {
-      _task._task = result;
-      _task._controller.sink.add(result);
-    });
+    try {
+      final _StarlightTask _task = _StarlightSyncExtension._process(id);
+      task().then((result) {
+        _task._task = result;
+        _task._controller.sink.add(result);
+      });
+    } catch (e) {
+      throw _StarlightException(
+        error: "Execute error occour on $id",
+        message: e.toString(),
+      );
+    }
   }
 
   /// If you want to invoke a method one more times using that result,
@@ -148,24 +155,31 @@ abstract class StarlightSync<N, R> {
     bool terminate = false,
     Duration delay = const Duration(milliseconds: 1000),
   }) {
-    final _StarlightTask _task = _StarlightSyncExtension._process(id);
-    task().then((R result) async {
-      _task._task = next(result);
-      _task._controller.sink.add(result);
-      if (!stop(next(result))) {
-        await Future.delayed(delay);
-        repeat(
-          id: id,
-          next: next,
-          stop: stop,
-          task: ([e]) => task(_task._task),
-          terminate: terminate,
-          delay: delay,
-        );
-      } else {
-        if (terminate) _tasks.removeWhere((task) => task._id == id);
-      }
-    });
+    try {
+      final _StarlightTask _task = _StarlightSyncExtension._process(id);
+      task().then((R result) async {
+        _task._task = next(result);
+        _task._controller.sink.add(result);
+        if (!stop(next(result))) {
+          await Future.delayed(delay);
+          repeat(
+            id: id,
+            next: next,
+            stop: stop,
+            task: ([e]) => task(_task._task),
+            terminate: terminate,
+            delay: delay,
+          );
+        } else {
+          if (terminate) _tasks.removeWhere((task) => task._id == id);
+        }
+      });
+    } catch (e) {
+      throw _StarlightException(
+        error: "Repeat error occour on $id",
+        message: e.toString(),
+      );
+    }
   }
 
   /// You can listen your [Future] by [id]
