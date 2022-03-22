@@ -70,7 +70,7 @@ abstract class StarlightSync<N, R> {
 
   /// If you want to execute a [Future], like this
   ///
-  /// <https://flutter.dev/assets-and-images/>
+  /// <https://drive.google.com/file/d/1gKr_qawcUBNYLohD1jhARHgWaVajMX24/preview>
   ///
   /// you need to create a [Stream] and [Sink] instance by using
   ///

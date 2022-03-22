@@ -3,15 +3,20 @@
 If you want use a Future as a Stream,If you want to invoke a method one more times using that result,you can use this package.
 
 ## Features
-| Name |  Status |
+| Method |  type |
 |------|------|
-| execute | ✅ |
-| repeat | ✅ |
+| register | void |
+| terminate | void |
+| terminateAll | void |
+| stream | stream |
+| last | dynamic |
+| execute | void |
+| repeat | void |
 
 
 ## Preview
 
-[Video](https://drive.google.com/file/d/1gKr_qawcUBNYLohD1jhARHgWaVajMX24/preview)
+[Starlight Sync Tutorial](https://drive.google.com/file/d/1hu8IkwPIbydiCLdS5bEwozvafF1P-26z/view)
 
 
 ## Installation
@@ -37,34 +42,84 @@ import 'package:starlight_sync/starlight_sync.dart';
 
 And then you can use easily.
 
-Register a process
+## Note
+If you want to use a Future as a Stream or want to invoke a method one more times using that result,
+you need to register a process
+
+
+## Register 
+You can register a process by [id].[id] must be a unique string.
 ```dart
    StarlightSync.register(id:"process 1");
 ```
 
-Terminate a process
+## Stream
+You can get a stream with a registered [id] and watch the changes directly.
+```dart
+    StarlightSync.stream(id:"process 1").listen((event){
+        print("future stream is ${event['body']}");
+    });
+```
+
+## Terminate 
+You can terminate a process by [id].After terminate a process,
+you can't execute that process anymore.
 ```dart
    StarlightSync.terminate(id:"process 1");
  ```
 
-Terminate all process
+## TerminateAll
+You can terminate all process by using terminateAll method.
 ```dart
    StarlightSync.terminateAll();
 ```
 
-Execute a future
+
+
+## Last
+You can also get your last value by [id].
+```dart
+    final String lastValue = StarlightSync.last<String>(id"process 1");
+```
+
+## Execute 
+If you want to execute a [Future] like this
+<https://drive.google.com/file/d/1gKr_qawcUBNYLohD1jhARHgWaVajMX24/preview>
+you need to register and listen by id
+eg.
  ```dart
+    ///Register a process
     StarlightSync.register(id:"process 1");
+    ///Listen our future
     StarlightSync.stream(id:"process 1").listen((event){
         print("future stream is ${event['body']}");
     });
+    ///Invoke a futuer 
     Timer.periodic(Duration(seconds:1), (){
         StarlightSync.execute(id:"process 1",task:()async{
             await http.get('/get/random-images');
         })
     });
  ```
-Execute a Future one more times using that result
+
+## Repeat
+If you want to invoke a method one more times using that result,
+  
+you can use this [repeat] method by providing
+  
+[id],[next],[stop],[task],[terminate] and [delay].
+  
+[id] must be registered.
+  
+[next] parameter will use in next time invoke.
+  
+[stop] parameter will determine the [task] method need to invoke or not.
+  
+[task] parameter is your [Future] work.
+  
+[terminate] parameter will determine the [Stream] and [Sink] should be terminated or not.
+  
+[delay] parameter will invoke after [task] is done.
  ```dart
    StarlightSync.register<String?, ResponseModel>(id: 'all user');
    int i = 0;
