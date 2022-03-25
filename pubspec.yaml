@@ -1,6 +1,6 @@
 name: starlight_sync
 description: If you want use a Future as a Stream,If you want to invoke a method one more times using that result,you can use this package.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/YeMyoAung/starlight_sync.git
 
 environment:

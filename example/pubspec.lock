@@ -145,12 +145,10 @@ packages:
   starlight_sync:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "0b584f3cf41ed2b9055e5b05e737c8fc614bca64"
-      url: "https://github.com/YeMyoAung/starlight_sync.git"
-    source: git
-    version: "0.0.1"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.2"
   stream_channel:
     dependency: transitive
     description:

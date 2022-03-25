@@ -76,11 +76,11 @@ class _MyApp extends StatelessWidget {
         onPressed: () {
           StarlightSync.repeat(
             id: "dog.ceo/random",
-            next: (Map result) {
+            next: (Map result) async {
               if (result['status'] != "success") return null;
               return (result['next'] as int) + 1;
             },
-            stop: (int? next) => next == null,
+            stop: (int? next) async => next == null,
             task: ([int? next]) async {
               final Map body = jsonDecode((await http.get(
                 Uri.parse(

@@ -149,8 +149,8 @@ abstract class StarlightSync<N, R> {
   // / ```
   static void repeat<N, R>({
     required String id,
-    required N Function(R) next,
-    required bool Function(N) stop,
+    required Future<N> Function(R) next,
+    required Future<bool> Function(N) stop,
     required Future<R> Function([N]) task,
     bool terminate = false,
     Duration delay = const Duration(milliseconds: 1000),
@@ -158,9 +158,9 @@ abstract class StarlightSync<N, R> {
     try {
       final _StarlightTask _task = _StarlightSyncExtension._process(id);
       task().then((R result) async {
-        _task._task = next(result);
+        _task._task = await next(result);
         _task._controller.sink.add(result);
-        if (!stop(next(result))) {
+        if (!await stop(await next(result))) {
           await Future.delayed(delay);
           repeat(
             id: id,

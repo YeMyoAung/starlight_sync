@@ -245,8 +245,8 @@ class RepeatExampleScreen extends StatelessWidget {
         onPressed: () {
           StarlightSync.repeat(
             id: 'dog.ceo/repeat',
-            next: (result) => result,
-            stop: (index) => index == 10,
+            next: (result) async => result,
+            stop: (index) async => index == 10,
             task: ([_]) async => http.get(
               Uri.parse(
                 'https://dog.ceo/api/breeds/image/random',
